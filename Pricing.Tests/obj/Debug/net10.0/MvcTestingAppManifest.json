@@ -1,6 +1,6 @@
 {
-  "Pricing.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/i34nk\/Desktop\/untitled folder\/zeabix\/Pricing\/Pricing.Api",
-  "Pricing.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/i34nk\/Desktop\/untitled folder\/zeabix\/Pricing\/Pricing.Application",
-  "Pricing.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/i34nk\/Desktop\/untitled folder\/zeabix\/Pricing\/Pricing.Domain",
-  "Pricing.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/i34nk\/Desktop\/untitled folder\/zeabix\/Pricing\/Pricing.Infrastructure"
+  "Pricing.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/i34nk\/Desktop\/untitled folder\/zeabix\/ZeabixPricing\/Pricing.Api",
+  "Pricing.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/i34nk\/Desktop\/untitled folder\/zeabix\/ZeabixPricing\/Pricing.Application",
+  "Pricing.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/i34nk\/Desktop\/untitled folder\/zeabix\/ZeabixPricing\/Pricing.Domain",
+  "Pricing.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/i34nk\/Desktop\/untitled folder\/zeabix\/ZeabixPricing\/Pricing.Infrastructure"
 }

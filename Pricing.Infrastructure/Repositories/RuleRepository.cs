@@ -123,17 +123,24 @@ public class RuleRepository : IRuleRepository
 
         try
         {
-            return ruleDataList.Select(r => new Rule
-            {
-                Id = r.Id,
-                Name = r.Name,
-                Type = r.Type,
-                Priority = r.Priority,
-                IsActive = r.IsActive,
-                EffectiveFrom = DateTime.SpecifyKind(r.EffectiveFrom, DateTimeKind.Utc),
-                EffectiveTo = DateTime.SpecifyKind(r.EffectiveTo, DateTimeKind.Utc),
-                ConfigJson = JsonSerializer.SerializeToElement(r.ConfigJson)
-            }).ToList();
+            return ruleDataList
+                .Where(r => r.IsActive)
+                .Where(r =>
+                    DateTime.UtcNow >= r.EffectiveFrom &&
+                    DateTime.UtcNow <= r.EffectiveTo)
+                .Select(r => new Rule
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Type = r.Type,
+                    Priority = r.Priority,
+                    IsActive = r.IsActive,
+                    EffectiveFrom = DateTime.SpecifyKind(r.EffectiveFrom, DateTimeKind.Utc),
+                    EffectiveTo = DateTime.SpecifyKind(r.EffectiveTo, DateTimeKind.Utc),
+                    ConfigJson = JsonSerializer.SerializeToElement(r.ConfigJson)
+                })
+                .OrderBy(r => r.Priority)
+                .ToList();
         }
         catch (Exception ex)
         {

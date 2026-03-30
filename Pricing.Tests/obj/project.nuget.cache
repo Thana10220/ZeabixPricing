@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "UI8Uw6fpwQI=",
+  "dgSpecHash": "CentllE9IPc=",
   "success": true,
   "projectFilePath": "/Users/i34nk/Desktop/untitled folder/zeabix/ZeabixPricing/Pricing.Tests/Pricing.Tests.csproj",
   "expectedPackageFiles": [
     "/Users/i34nk/.nuget/packages/castle.core/5.1.1/castle.core.5.1.1.nupkg.sha512",
     "/Users/i34nk/.nuget/packages/coverlet.collector/6.0.4/coverlet.collector.6.0.4.nupkg.sha512",
+    "/Users/i34nk/.nuget/packages/fluentassertions/8.9.0/fluentassertions.8.9.0.nupkg.sha512",
     "/Users/i34nk/.nuget/packages/microsoft.aspnetcore.mvc.testing/10.0.5/microsoft.aspnetcore.mvc.testing.10.0.5.nupkg.sha512",
     "/Users/i34nk/.nuget/packages/microsoft.aspnetcore.openapi/10.0.5/microsoft.aspnetcore.openapi.10.0.5.nupkg.sha512",
     "/Users/i34nk/.nuget/packages/microsoft.aspnetcore.testhost/10.0.5/microsoft.aspnetcore.testhost.10.0.5.nupkg.sha512",

@@ -12,6 +12,7 @@
           "Microsoft.Extensions.Hosting": "11.0.0-preview.2.26159.112",
           "Microsoft.Extensions.Options": "11.0.0-preview.2.26159.112",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "11.0.0-preview.2.26159.112",
+          "Polly": "8.6.6",
           "Pricing.Application": "1.0.0",
           "Pricing.Domain": "1.0.0"
         },
@@ -385,6 +386,25 @@
           }
         }
       },
+      "Polly/8.6.6": {
+        "dependencies": {
+          "Polly.Core": "8.6.6"
+        },
+        "runtime": {
+          "lib/net6.0/Polly.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.6.6.5454"
+          }
+        }
+      },
+      "Polly.Core/8.6.6": {
+        "runtime": {
+          "lib/net8.0/Polly.Core.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.6.6.5454"
+          }
+        }
+      },
       "System.Diagnostics.DiagnosticSource/11.0.0-preview.2.26159.112": {
         "runtime": {
           "lib/net10.0/System.Diagnostics.DiagnosticSource.dll": {
@@ -669,6 +689,20 @@
       "sha512": "sha512-1S1pHUdrdgz8tVgJCgMli0cN3np/k6aLTwYASyQFHhuPrUzq0YaTHzge23BUqgIbKCZSFLzQ2V9LKgxfRsCFeQ==",
       "path": "microsoft.extensions.primitives/11.0.0-preview.2.26159.112",
       "hashPath": "microsoft.extensions.primitives.11.0.0-preview.2.26159.112.nupkg.sha512"
+    },
+    "Polly/8.6.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-czKHYJ6uGowPijuZt4kgF4njfGvWxVZ8mKBcrZ9iEtwDe9HKdF0ug6p6TwUG8EHuuufgbDU//rSBFebt5/0Fyw==",
+      "path": "polly/8.6.6",
+      "hashPath": "polly.8.6.6.nupkg.sha512"
+    },
+    "Polly.Core/8.6.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lCBL9mmhF9TZxHG3beVRkyjlLohkIC464xIAq7J7Y59C+z42hmsdUaeCKl2SIAYertOUU5TeBXyQDLDQGIKePQ==",
+      "path": "polly.core/8.6.6",
+      "hashPath": "polly.core.8.6.6.nupkg.sha512"
     },
     "System.Diagnostics.DiagnosticSource/11.0.0-preview.2.26159.112": {
       "type": "package",
