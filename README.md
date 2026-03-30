@@ -273,7 +273,7 @@ POST /rules
 ### Update Rule
 
 ```http
-PUT /rules/{id}
+PATCH /rules/{id}
 ```
 
 ---
