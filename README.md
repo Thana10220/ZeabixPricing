@@ -94,6 +94,10 @@ docker compose up --build
 ```bash
 docker compose down
 ```
+---
+# swagger (API Document)
+
+http://localhost:5076/swagger/index.html
 
 ---
 
@@ -167,7 +171,7 @@ POST /quotes/price
 POST /quotes/bulk
 ```
 
-*** Attach Sample File in directory sample_data => bulk.csv
+*** Attach Sample File in directory sample_data => bulk_quotes.csv
 
 ### Request
 

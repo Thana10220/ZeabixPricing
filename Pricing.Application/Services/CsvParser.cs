@@ -14,17 +14,26 @@ public class CsvParser : ICsvParser
     }
 
     public async Task<List<QuoteRequest>> ParseAsync(Stream stream)
+{
+    if (stream == null || !stream.CanRead)
     {
-        var requests = new List<QuoteRequest>();
+        _logger.LogError("Invalid stream provided to CsvParser");
+        throw new ArgumentException("Invalid file stream");
+    }
 
+    var requests = new List<QuoteRequest>();
+
+    int lineNumber = 0;
+    int successCount = 0;
+    int failCount = 0;
+
+    _logger.LogInformation("CSV parsing started");
+
+    try
+    {
         using var reader = new StreamReader(stream);
 
         bool isHeader = true;
-        int lineNumber = 0;
-        int successCount = 0;
-        int failCount = 0;
-
-        _logger.LogInformation("CSV parsing started");
 
         while (!reader.EndOfStream)
         {
@@ -44,24 +53,45 @@ public class CsvParser : ICsvParser
                 continue;
             }
 
-            _logger.LogDebug("Processing line {Line}: {Content}", lineNumber, line);
-
-            var parts = line.Split(',');
-
-            if (parts.Length < 3)
-            {
-                failCount++;
-                _logger.LogWarning("Invalid column count at line {Line}", lineNumber);
-                continue;
-            }
-
             try
             {
+                var parts = line.Split(',');
+
+                if (parts.Length < 3)
+                {
+                    failCount++;
+                    _logger.LogWarning("Invalid column count at line {Line}", lineNumber);
+                    continue;
+                }
+                
+                if (!decimal.TryParse(parts[0], out var weight))
+                {
+                    failCount++;
+                    _logger.LogWarning("Invalid weight at line {Line}: {Value}", lineNumber, parts[0]);
+                    continue;
+                }
+
+                var area = parts[1]?.Trim();
+
+                if (string.IsNullOrWhiteSpace(area))
+                {
+                    failCount++;
+                    _logger.LogWarning("Empty area at line {Line}", lineNumber);
+                    continue;
+                }
+
+                if (!DateTime.TryParse(parts[2], out var requestTime))
+                {
+                    failCount++;
+                    _logger.LogWarning("Invalid datetime at line {Line}: {Value}", lineNumber, parts[2]);
+                    continue;
+                }
+
                 var request = new QuoteRequest
                 {
-                    Weight = decimal.Parse(parts[0]),
-                    Area = parts[1].Trim(),
-                    RequestTime = DateTime.Parse(parts[2]).ToUniversalTime()
+                    Weight = weight,
+                    Area = area,
+                    RequestTime = requestTime.ToUniversalTime()
                 };
 
                 requests.Add(request);
@@ -71,8 +101,8 @@ public class CsvParser : ICsvParser
             {
                 failCount++;
 
-                _logger.LogWarning(ex,
-                    "Failed to parse line {Line}: {Content}",
+                _logger.LogError(ex,
+                    "Unexpected error parsing line {Line}: {Content}",
                     lineNumber,
                     line);
             }
@@ -86,4 +116,11 @@ public class CsvParser : ICsvParser
 
         return requests;
     }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Critical error while parsing CSV");
+
+        throw new Exception("Failed to process CSV file");
+    }
+}
 }

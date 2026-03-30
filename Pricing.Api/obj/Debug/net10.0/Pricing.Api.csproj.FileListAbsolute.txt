@@ -149,3 +149,6 @@
 /Users/i34nk/Desktop/untitled folder/zeabix/ZeabixPricing/Pricing.Api/obj/Debug/net10.0/Pricing.Api.pdb
 /Users/i34nk/Desktop/untitled folder/zeabix/ZeabixPricing/Pricing.Api/obj/Debug/net10.0/Pricing.Api.genruntimeconfig.cache
 /Users/i34nk/Desktop/untitled folder/zeabix/ZeabixPricing/Pricing.Api/obj/Debug/net10.0/ref/Pricing.Api.dll
+/Users/i34nk/Desktop/untitled folder/zeabix/ZeabixPricing/Pricing.Api/bin/Debug/net10.0/Swashbuckle.AspNetCore.Swagger.dll
+/Users/i34nk/Desktop/untitled folder/zeabix/ZeabixPricing/Pricing.Api/bin/Debug/net10.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Users/i34nk/Desktop/untitled folder/zeabix/ZeabixPricing/Pricing.Api/bin/Debug/net10.0/Swashbuckle.AspNetCore.SwaggerUI.dll
