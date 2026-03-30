@@ -1,21 +1,21 @@
-namespace Pricing.Infrastructure.Workers;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
-using Pricing.Application.Interfaces;
-using Pricing.Application.Services;
+using Microsoft.Extensions.Options;
 using Pricing.Application.DTOs;
+using Pricing.Application.Interfaces;
+using Pricing.Domain.Entities;
 using Pricing.Domain.Enums;
 using Pricing.Infrastructure.Configuration;
 
+namespace Pricing.Infrastructure.Workers;
+
 public class JobWorker : BackgroundService
 {
-    private readonly IJobQueue _queue;
-    private readonly IServiceProvider _sp;
-    private readonly JobSettings _settings;
     private readonly ILogger<JobWorker> _logger;
+    private readonly IJobQueue _queue;
+    private readonly JobSettings _settings;
+    private readonly IServiceProvider _sp;
 
     public JobWorker(
         IJobQueue queue,
@@ -35,38 +35,53 @@ public class JobWorker : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            var jobId = await _queue.DequeueAsync(stoppingToken);
-
-            using var scope = _sp.CreateScope();
-
-            var jobRepo = scope.ServiceProvider.GetRequiredService<IJobRepository>();
-            var useCase = scope.ServiceProvider.GetRequiredService<CalculateQuoteService>();
-
-            var job = jobRepo.Get(jobId);
-
-            if (job == null)
+            string jobId;
+            
+            try
             {
-                _logger.LogWarning("Job not found: {JobId}", jobId);
+                jobId = await _queue.DequeueAsync(stoppingToken);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("JobWorker is stopping (cancellation requested)");
+                break;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while dequeuing job");
+                await Task.Delay(1000, stoppingToken);
                 continue;
             }
 
-            using (_logger.BeginScope(new Dictionary<string, object>
+            try
             {
-                ["JobId"] = job.JobId,
-                ["CorrelationId"] = job.CorrelationId ?? "N/A"
-            }))
-            {
-                try
+                using var scope = _sp.CreateScope();
+
+                var jobRepo = scope.ServiceProvider.GetRequiredService<IJobRepository>();
+                var useCase = scope.ServiceProvider.GetRequiredService<CalculateQuoteService>();
+
+                var job = jobRepo.Get(jobId);
+
+                if (job == null)
                 {
-                    _logger.LogInformation("Processing job");
+                    _logger.LogWarning("Job not found: {JobId}", jobId);
+                    continue;
+                }
 
-                    job.Status = JobStatus.Processing;
-                    jobRepo.Update(job);
+                if (job.Status == JobStatus.Completed)
+                {
+                    _logger.LogWarning("Skip completed job: {JobId}", jobId);
+                    continue;
+                }
 
-                    foreach (var item in job.Items)
+                _logger.LogInformation("Processing job {JobId}", jobId);
+
+                SafeUpdate(jobRepo, job, j => j.Status = JobStatus.Processing);
+
+                foreach (var item in job.Items)
+                    try
                     {
-                        _logger.LogDebug("Processing item Weight={Weight}, Area={Area}",
-                            item.Weight, item.Area);
+                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)); // 🔥 timeout per item
 
                         var result = useCase.Execute(new QuoteRequest
                         {
@@ -78,46 +93,93 @@ public class JobWorker : BackgroundService
                         item.FinalPrice = result.FinalPrice;
                         item.AppliedRules = result.AppliedRules;
                     }
-
-                    job.Status = JobStatus.Completed;
-                    job.CompletedAt = DateTime.UtcNow;
-                    job.ErrorMessage = null;
-
-                    _logger.LogInformation("Job completed successfully");
-                }
-                catch (Exception ex)
-                {
-                    job.RetryCount++;
-                    job.ErrorMessage = ex.Message;
-
-                    if (job.RetryCount <= _settings.MaxRetries)
+                    catch (Exception ex)
                     {
-                        job.Status = JobStatus.Pending;
-
-                        _logger.LogWarning(ex,
-                            "Job failed. Retrying {RetryCount}/{MaxRetries}",
-                            job.RetryCount,
-                            _settings.MaxRetries);
-
-                        var delay = TimeSpan.FromSeconds(_settings.RetryDelaySeconds);
-                        await Task.Delay(delay, stoppingToken);
-
-                        _queue.Enqueue(job.JobId);
-                    }
-                    else
-                    {
-                        job.Status = JobStatus.Failed;
-
                         _logger.LogError(ex,
-                            "Job failed permanently after {RetryCount} retries",
-                            job.RetryCount);
+                            "Item failed in job {JobId}, Weight={Weight}, Area={Area}",
+                            jobId,
+                            item.Weight,
+                            item.Area);
+                        
+                        item.AppliedRules = new List<string> { "ERROR" };
                     }
-                }
 
-                jobRepo.Update(job);
+                SafeUpdate(jobRepo, job, j =>
+                {
+                    j.Status = JobStatus.Completed;
+                    j.CompletedAt = DateTime.UtcNow;
+                    j.ErrorMessage = null;
+                });
+
+                _logger.LogInformation("Job completed: {JobId}", jobId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Critical error processing job {JobId}", jobId);
+
+                await HandleRetry(jobId, stoppingToken);
             }
         }
+    }
 
-        _logger.LogInformation("JobWorker stopped");
+    private async Task HandleRetry(string jobId, CancellationToken stoppingToken)
+    {
+        using var scope = _sp.CreateScope();
+        var jobRepo = scope.ServiceProvider.GetRequiredService<IJobRepository>();
+
+        var job = jobRepo.Get(jobId);
+        if (job == null) return;
+
+        job.RetryCount++;
+        job.ErrorMessage = "Processing failed";
+
+        if (job.RetryCount <= _settings.MaxRetries)
+        {
+            job.Status = JobStatus.Pending;
+            
+            var baseDelay = Math.Pow(2, job.RetryCount);
+            var jitter = Random.Shared.Next(0, 1000) / 1000.0;
+
+            var delay = TimeSpan.FromSeconds(baseDelay + jitter);
+
+            _logger.LogWarning(
+                "Retrying job {JobId} in {Delay}s (Retry={Retry})",
+                jobId,
+                delay.TotalSeconds,
+                job.RetryCount);
+
+            SafeUpdate(jobRepo, job, _ => { });
+
+            try
+            {
+                await Task.Delay(delay, stoppingToken);
+                _queue.Enqueue(jobId);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogWarning("Retry canceled due to shutdown: {JobId}", jobId);
+            }
+        }
+        else
+        {
+            job.Status = JobStatus.Failed;
+
+            SafeUpdate(jobRepo, job, _ => { });
+
+            _logger.LogError("Job permanently failed: {JobId}", jobId);
+        }
+    }
+
+    private void SafeUpdate(IJobRepository repo, PricingJob job, Action<PricingJob> update)
+    {
+        try
+        {
+            update(job);
+            repo.Update(job);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to update job state: {JobId}", job.JobId);
+        }
     }
 }

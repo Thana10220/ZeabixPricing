@@ -304,11 +304,181 @@ Update Status (Completed / Failed)
 
 ---
 
-# 🔄 Retry Mechanism
+# 🚦 Rate Limiting & Retry Policy
 
-* Configurable retry count
-* Delay between retries
-* Failed jobs marked after max retries
+This service includes built-in **rate limiting** and **retry mechanisms** to ensure stability, prevent abuse, and improve resilience.
+
+---
+
+# 🚦 Rate Limiting
+
+Rate limiting is applied at the API level to prevent excessive requests.
+
+## 🔧 Implementation
+
+Uses .NET built-in middleware:
+
+```csharp
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("fixed", opt =>
+    {
+        opt.Window = TimeSpan.FromSeconds(10);
+        opt.PermitLimit = 20;
+        opt.QueueLimit = 5;
+    });
+
+    options.AddFixedWindowLimiter("bulk", opt =>
+    {
+        opt.Window = TimeSpan.FromSeconds(30);
+        opt.PermitLimit = 5;
+    });
+});
+```
+
+---
+
+## 📌 Applied Endpoints
+
+```csharp
+[EnableRateLimiting("fixed")]
+POST /quotes/price
+
+[EnableRateLimiting("bulk")]
+POST /quotes/bulk
+POST /quotes/bulk/csv
+```
+
+---
+
+## 🚫 Behavior
+
+* Exceeding limit returns:
+
+```http
+429 Too Many Requests
+```
+
+---
+
+# 🔁 Retry Policy
+
+Retry logic is implemented for both:
+
+* Rule loading (infrastructure)
+* Job processing (worker)
+
+---
+
+## 🔧 RuleRepository Retry (Polly)
+
+Uses **Polly** for retry + circuit breaker:
+
+```csharp
+Policy
+    .Handle<IOException>()
+    .Or<TimeoutException>()
+    .WaitAndRetryAsync(3, retryAttempt =>
+        TimeSpan.FromMilliseconds(200 * retryAttempt));
+```
+
+---
+
+## 🔌 Circuit Breaker
+
+```csharp
+Policy
+    .Handle<IOException>()
+    .Or<TimeoutException>()
+    .CircuitBreakerAsync(3, TimeSpan.FromSeconds(10));
+```
+
+---
+
+## 🎯 Behavior
+
+* Retries on transient failures (I/O, timeout)
+* Stops retrying on data errors (e.g. invalid JSON)
+* Opens circuit after repeated failures
+
+---
+
+# 🔁 Job Retry (Worker)
+
+Background worker retries failed jobs with **exponential backoff**.
+
+## 🔧 Strategy
+
+```text
+Retry Delay = 2^RetryCount seconds
+```
+
+Example:
+
+| Retry | Delay |
+| ----- | ----- |
+| 1     | 2 sec |
+| 2     | 4 sec |
+| 3     | 8 sec |
+
+---
+
+## 🔀 Jitter (Anti-Spike)
+
+Random delay added:
+
+```text
+Delay = base + random(0-1s)
+```
+
+---
+
+## 🔁 Retry Flow
+
+```text
+Job Failed
+   ↓
+Increase RetryCount
+   ↓
+Check MaxRetries
+   ↓
+Re-enqueue job
+   ↓
+Worker processes again
+```
+
+---
+
+## ❌ Max Retry Reached
+
+* Job marked as:
+
+```text
+FAILED
+```
+
+* Error message stored
+
+---
+
+# 🛡️ Resilience Summary
+
+| Feature             | Purpose                   |
+| ------------------- | ------------------------- |
+| Rate Limiting       | Prevent overload          |
+| Retry Policy        | Handle transient errors   |
+| Circuit Breaker     | Prevent cascading failure |
+| Exponential Backoff | Avoid retry storms        |
+| Jitter              | Reduce traffic spikes     |
+
+---
+
+# 🚀 Future Improvements
+
+* Distributed rate limiting (Redis)
+* Dead Letter Queue (DLQ)
+* Retry visibility dashboard
+* Per-tenant rate limits
 
 ---
 

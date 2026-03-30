@@ -1243,6 +1243,10 @@
             "Microsoft.Extensions.Options.ConfigurationExtensions": {
               "target": "Package",
               "version": "[11.0.0-preview.2.26159.112, )"
+            },
+            "Polly": {
+              "target": "Package",
+              "version": "[8.6.6, )"
             }
           },
           "imports": [

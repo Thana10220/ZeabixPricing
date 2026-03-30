@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "6OFzO7J5E6g=",
+  "dgSpecHash": "gYFMrdYw6Go=",
   "success": true,
   "projectFilePath": "/Users/i34nk/Desktop/untitled folder/zeabix/ZeabixPricing/Pricing.Api/Pricing.Api.csproj",
   "expectedPackageFiles": [
@@ -34,6 +34,8 @@
     "/Users/i34nk/.nuget/packages/microsoft.extensions.options.configurationextensions/11.0.0-preview.2.26159.112/microsoft.extensions.options.configurationextensions.11.0.0-preview.2.26159.112.nupkg.sha512",
     "/Users/i34nk/.nuget/packages/microsoft.extensions.primitives/11.0.0-preview.2.26159.112/microsoft.extensions.primitives.11.0.0-preview.2.26159.112.nupkg.sha512",
     "/Users/i34nk/.nuget/packages/microsoft.openapi/2.4.1/microsoft.openapi.2.4.1.nupkg.sha512",
+    "/Users/i34nk/.nuget/packages/polly/8.6.6/polly.8.6.6.nupkg.sha512",
+    "/Users/i34nk/.nuget/packages/polly.core/8.6.6/polly.core.8.6.6.nupkg.sha512",
     "/Users/i34nk/.nuget/packages/swashbuckle.aspnetcore/10.1.7/swashbuckle.aspnetcore.10.1.7.nupkg.sha512",
     "/Users/i34nk/.nuget/packages/swashbuckle.aspnetcore.swagger/10.1.7/swashbuckle.aspnetcore.swagger.10.1.7.nupkg.sha512",
     "/Users/i34nk/.nuget/packages/swashbuckle.aspnetcore.swaggergen/10.1.7/swashbuckle.aspnetcore.swaggergen.10.1.7.nupkg.sha512",

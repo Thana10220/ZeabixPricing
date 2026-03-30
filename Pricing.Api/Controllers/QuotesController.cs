@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.RateLimiting;
 using Pricing.Application.Services;
 
 namespace Pricing.Api.Controllers;
@@ -27,6 +28,7 @@ public class QuotesController : ControllerBase
         _csvParser = csvParser;
     }
 
+    [EnableRateLimiting("fixed")]
     [HttpPost("price")]
     public IActionResult Calculate([FromBody] QuoteRequest request)
     {
@@ -47,12 +49,14 @@ public class QuotesController : ControllerBase
         }
     }
 
+    [EnableRateLimiting("bulk")]
     [HttpPost("bulk")]
     public IActionResult CreateBulk([FromBody] List<QuoteRequest> requests)
     {
         return HandleBulk(requests, "json");
     }
 
+    [EnableRateLimiting("bulk")]
     [HttpPost("bulk/csv")]
     public async Task<IActionResult> CreateBulkCsv(IFormFile file)
     {
@@ -86,6 +90,7 @@ public class QuotesController : ControllerBase
         }
     }
 
+    [EnableRateLimiting("bulk")]
     [HttpGet("jobs/{jobId}")]
     public IActionResult GetJob(string jobId)
     {

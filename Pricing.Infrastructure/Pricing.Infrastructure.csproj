@@ -21,6 +21,7 @@
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="11.0.0-preview.2.26159.112" />
       <PackageReference Include="Microsoft.Extensions.Options" Version="11.0.0-preview.2.26159.112" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="11.0.0-preview.2.26159.112" />
+      <PackageReference Include="Polly" Version="8.6.6" />
     </ItemGroup>
 
     <ItemGroup>

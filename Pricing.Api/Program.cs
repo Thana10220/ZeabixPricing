@@ -9,6 +9,8 @@ using Pricing.Infrastructure.Persistence;
 using Pricing.Infrastructure.Queue;
 using Pricing.Infrastructure.Workers;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,23 @@ builder.Services.AddScoped<ICsvParser, CsvParser>();
 builder.Services.AddSingleton<IRuleService, RuleService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("fixed", opt =>
+    {
+        opt.Window = TimeSpan.FromSeconds(10);   
+        opt.PermitLimit = 20;                    
+        opt.QueueLimit = 5;                     
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    });
+    
+    options.AddFixedWindowLimiter("bulk", opt =>
+    {
+        opt.Window = TimeSpan.FromSeconds(30);
+        opt.PermitLimit = 5;
+    });
+});
+
 
 var app = builder.Build();
 
@@ -40,6 +59,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseMiddleware<GlobalExceptionMiddleware>(); 
 app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseRateLimiter();
 app.MapGet("/health", () => "OK");
 app.MapControllers();
 app.UseSwagger();
