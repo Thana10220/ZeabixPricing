@@ -1,0 +1,104 @@
+[
+  {
+    "Id": "1a1f1c2e-0001-4a11-aaaa-111111111111",
+    "Name": "WeightTier - 0-10",
+    "Type": "WeightTier",
+    "Priority": 1,
+    "EffectiveFrom": "2024-01-01T00:00:00Z",
+    "EffectiveTo": "2027-01-01T00:00:00Z",
+    "IsActive": true,
+    "ConfigJson": {
+      "min": 0,
+      "max": 10,
+      "price": 0
+    }
+  },
+  {
+    "Id": "1a1f1c2e-0002-4a11-bbbb-222222222222",
+    "Name": "WeightTier - 10-30",
+    "Type": "WeightTier",
+    "Priority": 2,
+    "EffectiveFrom": "2024-01-01T00:00:00Z",
+    "EffectiveTo": "2027-01-01T00:00:00Z",
+    "IsActive": true,
+    "ConfigJson": {
+      "min": 10,
+      "max": 30,
+      "price": 20
+    }
+  },
+  {
+    "Id": "1a1f1c2e-0003-4a11-cccc-333333333333",
+    "Name": "WeightTier - 30-50",
+    "Type": "WeightTier",
+    "Priority": 3,
+    "EffectiveFrom": "2024-01-01T00:00:00Z",
+    "EffectiveTo": "2027-01-01T00:00:00Z",
+    "IsActive": true,
+    "ConfigJson": {
+      "min": 30,
+      "max": 50,
+      "price": 40
+    }
+  },
+  {
+    "Id": "2b2f2c3e-0001-4b22-dddd-444444444444",
+    "Name": "RemoteArea - ChiangMai/Phuket/MaeHongSon",
+    "Type": "RemoteAreaSurcharge",
+    "Priority": 4,
+    "EffectiveFrom": "2024-01-01T00:00:00Z",
+    "EffectiveTo": "2027-01-01T00:00:00Z",
+    "IsActive": true,
+    "ConfigJson": {
+      "areas": [
+        "\u0E40\u0E0A\u0E35\u0E22\u0E07\u0E43\u0E2B\u0E21\u0E48",
+        "\u0E20\u0E39\u0E40\u0E01\u0E47\u0E15",
+        "\u0E41\u0E21\u0E48\u0E2E\u0E48\u0E2D\u0E07\u0E2A\u0E2D\u0E19"
+      ],
+      "price": 50
+    }
+  },
+  {
+    "Id": "2b2f2c3e-0002-4b22-eeee-555555555555",
+    "Name": "RemoteArea - International",
+    "Type": "RemoteAreaSurcharge",
+    "Priority": 5,
+    "EffectiveFrom": "2024-01-01T00:00:00Z",
+    "EffectiveTo": "2027-01-01T00:00:00Z",
+    "IsActive": true,
+    "ConfigJson": {
+      "areas": [
+        "\u0E15\u0E48\u0E32\u0E07\u0E1B\u0E23\u0E30\u0E40\u0E17\u0E28"
+      ],
+      "price": 100
+    }
+  },
+  {
+    "Id": "3c3f3c4e-0001-4c33-ffff-666666666666",
+    "Name": "TimePromo - 09-18",
+    "Type": "TimeWindowPromotion",
+    "Priority": 6,
+    "EffectiveFrom": "2024-01-01T00:00:00Z",
+    "EffectiveTo": "2027-01-01T00:00:00Z",
+    "IsActive": true,
+    "ConfigJson": {
+      "startHour": 9,
+      "endHour": 18,
+      "discount": 10
+    }
+  },
+  {
+    "Id": "3c3f3c4e-0002-4c33-aaaa-777777777777",
+    "Name": "TimePromo - 00-06",
+    "Type": "TimeWindowPromotion",
+    "Priority": 7,
+    "EffectiveFrom": "2024-01-01T00:00:00Z",
+    "EffectiveTo": "2027-01-01T00:00:00Z",
+    "IsActive": true,
+    "ConfigJson": {
+      "startHour": 0,
+      "endHour": 6,
+      "discount": 5
+    }
+  }
+]

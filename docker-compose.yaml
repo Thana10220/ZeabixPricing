@@ -1,0 +1,22 @@
+﻿version: '3.8'
+
+services:
+  pricing-api:
+    build:
+      context: .
+      dockerfile: Pricing.Api/Dockerfile
+
+    container_name: pricing-api
+
+    ports:
+      - "5076:8080"
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - RuleSettings__FilePath=rules.json
+
+    volumes:
+      - ./Pricing.Api/rules.json:/app/rules.json
+
+    restart: always

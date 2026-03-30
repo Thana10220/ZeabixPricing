@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "9lX70MISjBg=",
+  "success": true,
+  "projectFilePath": "/Users/i34nk/Desktop/untitled folder/zeabix/Pricing/Pricing/Pricing.csproj",
+  "expectedPackageFiles": [
+    "/Users/i34nk/.nuget/packages/microsoft.aspnetcore.openapi/10.0.5/microsoft.aspnetcore.openapi.10.0.5.nupkg.sha512",
+    "/Users/i34nk/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

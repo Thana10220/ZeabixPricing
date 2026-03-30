@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "zU2nr9kDSBQ=",
+  "success": true,
+  "projectFilePath": "/Users/i34nk/Desktop/untitled folder/zeabix/ZeabixPricing/Pricing.Application/Pricing.Application.csproj",
+  "expectedPackageFiles": [
+    "/Users/i34nk/.nuget/packages/microsoft.extensions.configuration.abstractions/11.0.0-preview.2.26159.112/microsoft.extensions.configuration.abstractions.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/Users/i34nk/.nuget/packages/microsoft.extensions.dependencyinjection/11.0.0-preview.2.26159.112/microsoft.extensions.dependencyinjection.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/Users/i34nk/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/11.0.0-preview.2.26159.112/microsoft.extensions.dependencyinjection.abstractions.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/Users/i34nk/.nuget/packages/microsoft.extensions.logging.abstractions/11.0.0-preview.2.26159.112/microsoft.extensions.logging.abstractions.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/Users/i34nk/.nuget/packages/microsoft.extensions.primitives/11.0.0-preview.2.26159.112/microsoft.extensions.primitives.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/Users/i34nk/.nuget/packages/system.diagnostics.diagnosticsource/11.0.0-preview.2.26159.112/system.diagnostics.diagnosticsource.11.0.0-preview.2.26159.112.nupkg.sha512"
+  ],
+  "logs": []
+}
