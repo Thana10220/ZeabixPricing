@@ -108,7 +108,7 @@ http://localhost:5076/swagger/index.html
 Located at:
 
 ```
-Pricing.Api/rules.json
+Pricing.Api/Data/rules.json
 ```
 
 Example:
