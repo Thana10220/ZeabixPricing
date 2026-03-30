@@ -276,6 +276,22 @@ POST /rules
 PATCH /rules/{id}
 ```
 
+```json
+{
+    "name": "WeightTier - 68-98",
+    "type": "WeightTier",
+    "priority": 5,
+    "isActive": true,
+    "effectiveFrom": "2026-01-01T00:00:00Z",
+    "effectiveTo": "2027-01-01T00:00:00Z",
+    "configJson": {
+        "min": 68,
+        "max": 98,
+        "price": 25
+    }
+}
+```
+
 ---
 
 ### Delete Rule
